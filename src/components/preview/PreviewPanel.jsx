@@ -68,9 +68,24 @@ function SemanticGrid() {
 
 function TypeSpecimen() {
   return (
-    <div style={{ fontFamily: 'var(--bb-font-heading)' }}>
+    <div>
+      {/* Eyebrow */}
       <div
         style={{
+          fontFamily: 'var(--bb-font-body)',
+          fontSize: 'var(--bb-text-xs)',
+          fontWeight: 600,
+          color: 'var(--bb-action-primary)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          marginBottom: 'var(--bb-space-2)',
+        }}
+      >
+        Eyebrow Label
+      </div>
+      <div
+        style={{
+          fontFamily: 'var(--bb-font-heading)',
           fontSize: 'var(--bb-text-5xl)',
           fontWeight: 'var(--bb-heading-weight)',
           color: 'var(--bb-text-primary)',
@@ -81,6 +96,7 @@ function TypeSpecimen() {
       </div>
       <div
         style={{
+          fontFamily: 'var(--bb-font-heading)',
           fontSize: 'var(--bb-text-3xl)',
           fontWeight: 'var(--bb-heading-weight)',
           color: 'var(--bb-text-primary)',
@@ -92,6 +108,7 @@ function TypeSpecimen() {
       </div>
       <div
         style={{
+          fontFamily: 'var(--bb-font-heading)',
           fontSize: 'var(--bb-text-xl)',
           fontWeight: 'var(--bb-heading-weight)',
           color: 'var(--bb-text-primary)',
@@ -114,6 +131,16 @@ function TypeSpecimen() {
       >
         Body text at base size. This paragraph demonstrates the body font, weight, line height, and secondary text color. All values are driven by design tokens and update in real time.
       </p>
+      <div
+        style={{
+          fontFamily: 'var(--bb-font-body)',
+          fontSize: 'var(--bb-text-sm)',
+          color: 'var(--bb-text-secondary)',
+          marginTop: 'var(--bb-space-2)',
+        }}
+      >
+        Small / caption text for labels and secondary content.
+      </div>
       <code
         style={{
           fontFamily: 'var(--bb-font-mono)',
@@ -121,6 +148,10 @@ function TypeSpecimen() {
           color: 'var(--bb-text-secondary)',
           display: 'block',
           marginTop: 'var(--bb-space-3)',
+          backgroundColor: 'var(--bb-bg-card)',
+          padding: 'var(--bb-space-3)',
+          borderRadius: 'var(--bb-radius)',
+          border: '1px solid var(--bb-border-faint)',
         }}
       >
         const mono = &quot;JetBrains Mono&quot;;
@@ -163,7 +194,7 @@ function ComponentShowcase() {
       style={{
         backgroundColor: 'var(--bb-bg-primary)',
         padding: 'var(--bb-container-padding)',
-        borderRadius: 'var(--bb-card-radius)',
+        borderRadius: 'var(--bb-container-radius)',
       }}
     >
       {/* Buttons — Variants */}

@@ -18,6 +18,12 @@ export default function BorderSection() {
         onChange={(v) => setBorders('radius', v)}
       />
       <SliderControl
+        label="Container Radius"
+        value={borders.containerRadius}
+        min={0} max={32} step={1} unit="px"
+        onChange={(v) => setBorders('containerRadius', v)}
+      />
+      <SliderControl
         label="Card Radius"
         value={borders.cardRadius}
         min={0} max={32} step={1} unit="px"
@@ -59,20 +65,27 @@ export default function BorderSection() {
         <div className="text-[10px] font-semibold uppercase tracking-wider text-editor-text-muted mb-2">
           Preview
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center flex-wrap">
           <div
-            className="w-16 h-12 bg-editor-bg border border-editor-border"
+            className="w-20 h-14 bg-editor-bg border border-editor-border flex items-center justify-center text-[8px] text-editor-text-muted"
+            style={{ borderRadius: `${borders.containerRadius}px` }}
+          >
+            Container
+          </div>
+          <div
+            className="w-14 h-10 bg-editor-bg border border-editor-border flex items-center justify-center text-[8px] text-editor-text-muted"
             style={{ borderRadius: `${borders.cardRadius}px` }}
-            title="Card"
-          />
+          >
+            Card
+          </div>
           <div
-            className="px-4 py-2 bg-editor-accent text-white text-xs font-medium"
+            className="px-3 py-1.5 bg-editor-accent text-white text-[10px] font-medium"
             style={{ borderRadius: `${borders.buttonRadius}px` }}
           >
             Button
           </div>
           <div
-            className="px-3 py-1.5 bg-editor-bg border border-editor-border text-xs text-editor-text-muted"
+            className="px-2.5 py-1 bg-editor-bg border border-editor-border text-[10px] text-editor-text-muted"
             style={{ borderRadius: `${borders.inputRadius}px` }}
           >
             Input

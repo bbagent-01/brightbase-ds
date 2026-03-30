@@ -59,6 +59,7 @@ export function generateCSS(state, mode = 'resolved') {
   // Borders
   lines.push(`  --bb-radius: ${borders.radius}px;`);
   lines.push(`  --bb-card-radius: ${borders.cardRadius}px;`);
+  lines.push(`  --bb-container-radius: ${borders.containerRadius}px;`);
   lines.push(`  --bb-button-radius: ${borders.buttonRadius}px;`);
   lines.push(`  --bb-input-radius: ${borders.inputRadius}px;`);
   lines.push(`  --bb-shadow: ${SHADOW_PRESETS[borders.shadow] || 'none'};`);

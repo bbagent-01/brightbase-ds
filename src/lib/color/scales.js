@@ -6,61 +6,65 @@ import chroma from 'chroma-js';
  * Steps: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950
  * 500 is the input color. 50 is near-white, 950 is near-black.
  *
- * We use explicit lightness targets in Oklch to get well-distributed steps
- * rather than simple interpolation which clusters too much.
+ * The light side (50-400) interpolates from near-white down to just above the input.
+ * The dark side (600-950) interpolates from just below the input down to near-black.
+ * This ensures monotonically decreasing lightness regardless of how dark the input is.
  */
 export function generateScale(hex) {
   const base = chroma(hex);
+  const [baseL, baseC, baseH] = base.oklch();
 
-  // Target lightness values (Oklch L, 0-1 range)
-  // Designed so 50 is very light and 950 is very dark
-  const lightnessTargets = {
-    50: 0.97,
-    100: 0.93,
-    200: 0.87,
-    300: 0.78,
-    400: 0.68,
-    500: null, // use the actual input color
-    600: 0.45,
-    700: 0.37,
-    800: 0.29,
-    900: 0.21,
-    950: 0.14,
-  };
+  // Clamp base lightness to a sane range
+  const L = Math.max(0.05, Math.min(0.95, baseL || 0.5));
+  const h = baseH || 0;
+  const c = baseC || 0;
+
+  // Light side: distribute evenly from 0.97 down to just above L
+  const lightSteps = [50, 100, 200, 300, 400];
+  const lightTop = 0.97;
+  const lightBottom = L + (lightTop - L) * 0.08; // slightly above base
+
+  // Dark side: distribute evenly from just below L down to 0.08
+  const darkSteps = [600, 700, 800, 900, 950];
+  const darkTop = L - (L - 0.08) * 0.08; // slightly below base
+  const darkBottom = 0.08;
 
   const colors = {};
 
-  for (const [step, targetL] of Object.entries(lightnessTargets)) {
-    if (targetL === null) {
-      colors[step] = hex;
-      continue;
-    }
+  // Light steps
+  lightSteps.forEach((step, i) => {
+    const t = i / (lightSteps.length - 1); // 0 to 1
+    const targetL = lightTop - t * (lightTop - lightBottom);
+
+    // Desaturate toward white
+    const chromaScale = 0.15 + (t * 0.85);
+    const adjustedC = c * chromaScale;
 
     try {
-      // Get the base color's hue and chroma in Oklch
-      const [, c, h] = base.oklch();
-
-      // Scale chroma based on distance from 500
-      // Light steps get less chroma, dark steps get moderate chroma
-      const stepNum = parseInt(step);
-      let chromaScale;
-      if (stepNum < 500) {
-        // Light end: progressively desaturate toward white
-        chromaScale = (stepNum / 500) * 0.8 + 0.2;
-      } else {
-        // Dark end: moderate desaturation
-        chromaScale = 1 - ((stepNum - 500) / 500) * 0.5;
-      }
-
-      const adjustedChroma = (c || 0) * chromaScale;
-      colors[step] = chroma.oklch(targetL, adjustedChroma, h || 0).hex();
+      colors[step] = chroma.oklch(targetL, adjustedC, h).hex();
     } catch {
-      // Fallback: simple interpolation
-      const stepNum = parseInt(step);
-      const t = stepNum / 1000;
-      colors[step] = chroma.mix('#ffffff', hex, t, 'oklch').hex();
+      colors[step] = chroma.mix('#ffffff', hex, t * 0.8, 'oklch').hex();
     }
-  }
+  });
+
+  // Base (500)
+  colors[500] = hex;
+
+  // Dark steps
+  darkSteps.forEach((step, i) => {
+    const t = i / (darkSteps.length - 1); // 0 to 1
+    const targetL = darkTop - t * (darkTop - darkBottom);
+
+    // Moderate desaturation toward black
+    const chromaScale = 1 - (t * 0.6);
+    const adjustedC = c * chromaScale;
+
+    try {
+      colors[step] = chroma.oklch(targetL, adjustedC, h).hex();
+    } catch {
+      colors[step] = chroma.mix(hex, '#0a0a0a', t, 'oklch').hex();
+    }
+  });
 
   return colors;
 }

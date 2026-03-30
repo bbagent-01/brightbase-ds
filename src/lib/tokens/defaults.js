@@ -1,40 +1,40 @@
 /**
- * Default token values for a fresh design system.
+ * Default token values — Brightbase theme.
  * Flat key-value maps — simple to work with in UI.
  * DTCG conversion happens only on export.
  */
 
 export const DEFAULT_FOUNDATION_COLORS = {
-  primary: '#6366f1',
-  secondary: '#10b981',
-  accent: '#f59e0b',
+  primary: '#FE4E18',
+  secondary: '#34474E',
+  accent: '#e8e4dd',
   neutral: '#6b7280',
-  dark: '#111827',
+  dark: '#0D1E24',
 };
 
 export const DEFAULT_SEMANTIC = {
   // Backgrounds
-  'bg-primary': 'neutral-100',
-  'bg-surface': 'neutral-50',
-  'bg-card': 'neutral-50',
+  'bg-primary': 'accent-50',
+  'bg-surface': 'accent-100',
+  'bg-card': 'accent-50',
   // Text
   'text-primary': 'dark-900',
-  'text-secondary': 'neutral-700',
-  'text-on-action': 'neutral-50',
+  'text-secondary': 'secondary-700',
+  'text-on-action': 'accent-50',
   // Actions
   'action-primary': 'primary-500',
   'action-primary-hover': 'primary-600',
-  'action-secondary': 'neutral-700',
-  'action-secondary-hover': 'neutral-800',
-  'action-destructive': 'accent-600',
-  'action-destructive-hover': 'accent-700',
+  'action-secondary': 'secondary-500',
+  'action-secondary-hover': 'secondary-600',
+  'action-destructive': 'primary-700',
+  'action-destructive-hover': 'primary-800',
   // Borders
   'border-default': 'neutral-200',
   'border-faint': 'neutral-100',
   'border-focus': 'primary-400',
   // Feedback
   'feedback-success': 'secondary-500',
-  'feedback-error': 'accent-600',
+  'feedback-error': 'primary-600',
 };
 
 export const DEFAULT_TYPOGRAPHY = {
@@ -45,7 +45,7 @@ export const DEFAULT_TYPOGRAPHY = {
   headingWeight: 600,
   bodyWeight: 400,
   lineHeight: 1.5,
-  headingLineHeight: 1.2,
+  headingLineHeight: 1.15,
 };
 
 export const DEFAULT_SPACING = {
@@ -59,6 +59,7 @@ export const DEFAULT_SPACING = {
 export const DEFAULT_BORDERS = {
   radius: 8,
   cardRadius: 12,
+  containerRadius: 16,
   buttonRadius: 6,
   inputRadius: 6,
   shadow: 'subtle',

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import useTokenStore from '@/lib/tokens/store';
-import ColorPicker from '../controls/ColorPicker';
 import ScaleStepPicker from '../controls/ScaleStepPicker';
 import { getContrastInfo } from '@/lib/color/contrast';
 
@@ -13,6 +12,15 @@ const CONTRAST_PAIRS = [
   ['text-primary', 'bg-primary'],
   ['text-secondary', 'bg-primary'],
   ['text-on-action', 'action-primary'],
+];
+
+// Group semantic tokens by category for display
+const SEMANTIC_GROUPS = [
+  { label: 'Backgrounds', keys: ['bg-primary', 'bg-surface', 'bg-card'] },
+  { label: 'Text', keys: ['text-primary', 'text-secondary', 'text-on-action'] },
+  { label: 'Actions', keys: ['action-primary', 'action-primary-hover', 'action-secondary', 'action-secondary-hover', 'action-destructive', 'action-destructive-hover'] },
+  { label: 'Borders', keys: ['border-default', 'border-faint', 'border-focus'] },
+  { label: 'Feedback', keys: ['feedback-success', 'feedback-error'] },
 ];
 
 export default function ColorSection() {
@@ -30,24 +38,45 @@ export default function ColorSection() {
 
   return (
     <div className="space-y-5">
-      {/* Foundation Colors */}
+      {/* Foundation Colors — large swatches */}
       <div>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-editor-text-muted mb-2">
           Foundation
         </div>
-        <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2">
           {Object.entries(foundationColors).map(([name, hex]) => (
-            <ColorPicker
-              key={name}
-              label={name}
-              value={hex}
-              onChange={(v) => setFoundationColor(name, v)}
-              onRemove={protectedColors.includes(name) ? null : () => removeFoundationColor(name)}
-            />
+            <div key={name} className="relative group">
+              <div className="relative">
+                <input
+                  type="color"
+                  value={hex}
+                  onChange={(e) => setFoundationColor(name, e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div
+                  className="w-full h-16 rounded-lg border border-editor-border cursor-pointer"
+                  style={{ backgroundColor: hex }}
+                />
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <div>
+                  <div className="text-[10px] text-editor-text capitalize leading-tight">{name}</div>
+                  <div className="text-[9px] font-mono text-editor-text-muted uppercase">{hex}</div>
+                </div>
+                {!protectedColors.includes(name) && (
+                  <button
+                    onClick={() => removeFoundationColor(name)}
+                    className="opacity-0 group-hover:opacity-100 text-editor-text-muted hover:text-red-400 text-xs transition-opacity"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
           ))}
         </div>
         {/* Add color */}
-        <div className="flex gap-1 mt-2">
+        <div className="flex gap-1 mt-3">
           <input
             type="text"
             value={newColorName}
@@ -96,44 +125,53 @@ export default function ColorSection() {
         </div>
       </div>
 
-      {/* Semantic Assignments */}
+      {/* Semantic Assignments — grouped by category */}
       <div>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-editor-text-muted mb-2">
           Semantic Tokens
         </div>
-        <div className="space-y-1.5">
-          {Object.entries(semantic).map(([name, ref]) => {
-            // Check if this is a text token that has a contrast pair
-            const pair = CONTRAST_PAIRS.find(([fg]) => fg === name);
-            let contrastInfo = null;
-            if (pair) {
-              const fgHex = scales[semantic[pair[0]]] || '#000';
-              const bgHex = scales[semantic[pair[1]]] || '#fff';
-              contrastInfo = getContrastInfo(fgHex, bgHex);
-            }
-
-            return (
-              <div key={name} className="flex items-center gap-2">
-                <ScaleStepPicker
-                  currentRef={ref}
-                  onSelect={(key) => setSemanticRef(name, key)}
-                />
-                <span className="text-[10px] font-mono text-editor-text flex-1 truncate">{name}</span>
-                {contrastInfo && (
-                  <span
-                    className={`text-[9px] font-mono px-1 py-0.5 rounded ${
-                      contrastInfo.level === 'AAA' ? 'bg-green-900/40 text-green-400' :
-                      contrastInfo.level === 'AA' ? 'bg-yellow-900/40 text-yellow-400' :
-                      'bg-red-900/40 text-red-400'
-                    }`}
-                    title={`Contrast ratio: ${contrastInfo.ratio}:1`}
-                  >
-                    {contrastInfo.ratio} {contrastInfo.level}
-                  </span>
-                )}
+        <div className="space-y-3">
+          {SEMANTIC_GROUPS.map((group) => (
+            <div key={group.label}>
+              <div className="text-[9px] font-mono text-editor-text-muted/60 uppercase tracking-wider mb-1.5">
+                {group.label}
               </div>
-            );
-          })}
+              <div className="space-y-1">
+                {group.keys.filter((k) => semantic[k]).map((name) => {
+                  const ref = semantic[name];
+                  const pair = CONTRAST_PAIRS.find(([fg]) => fg === name);
+                  let contrastInfo = null;
+                  if (pair) {
+                    const fgHex = scales[semantic[pair[0]]] || '#000';
+                    const bgHex = scales[semantic[pair[1]]] || '#fff';
+                    contrastInfo = getContrastInfo(fgHex, bgHex);
+                  }
+
+                  return (
+                    <div key={name} className="flex items-center gap-2">
+                      <ScaleStepPicker
+                        currentRef={ref}
+                        onSelect={(key) => setSemanticRef(name, key)}
+                      />
+                      <span className="text-[10px] font-mono text-editor-text flex-1 truncate">{name}</span>
+                      {contrastInfo && (
+                        <span
+                          className={`text-[9px] font-mono px-1 py-0.5 rounded ${
+                            contrastInfo.level === 'AAA' ? 'bg-green-900/40 text-green-400' :
+                            contrastInfo.level === 'AA' ? 'bg-yellow-900/40 text-yellow-400' :
+                            'bg-red-900/40 text-red-400'
+                          }`}
+                          title={`Contrast ratio: ${contrastInfo.ratio}:1`}
+                        >
+                          {contrastInfo.ratio} {contrastInfo.level}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
