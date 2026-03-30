@@ -2,7 +2,10 @@
 
 import useTokenStore from '@/lib/tokens/store';
 import { TYPE_SCALE } from '@/lib/tokens/defaults';
-import ProofButton from './ProofButton';
+import Button from './atoms/Button';
+import Input from './atoms/Input';
+import Badge from './atoms/Badge';
+import Toggle from './atoms/Toggle';
 import ProofCard from './ProofCard';
 
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
@@ -150,41 +153,82 @@ function SpacingVis() {
   );
 }
 
-function ProofComponents() {
+function ComponentLabel({ children }) {
+  return <div className="text-[10px] font-mono text-gray-400 mb-3 mt-6 first:mt-0">{children}</div>;
+}
+
+function ComponentShowcase() {
   return (
     <div
       style={{
         backgroundColor: 'var(--bb-bg-primary)',
-        padding: 'var(--bb-section-padding) var(--bb-container-padding)',
-        borderRadius: 'var(--bb-radius)',
+        padding: 'var(--bb-container-padding)',
+        borderRadius: 'var(--bb-card-radius)',
       }}
     >
-      {/* Buttons */}
-      <div style={{ marginBottom: 'var(--bb-component-gap)' }}>
-        <div className="text-[10px] font-mono text-gray-400 mb-3">Buttons</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--bb-component-gap)', alignItems: 'center' }}>
-          <ProofButton variant="primary" size="sm">Small</ProofButton>
-          <ProofButton variant="primary" size="md">Primary</ProofButton>
-          <ProofButton variant="primary" size="lg">Large</ProofButton>
-          <ProofButton variant="secondary" size="md">Secondary</ProofButton>
-          <ProofButton variant="ghost" size="md">Ghost</ProofButton>
-        </div>
+      {/* Buttons — Variants */}
+      <ComponentLabel>Button Variants</ComponentLabel>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--bb-space-3)', alignItems: 'center' }}>
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+      </div>
+
+      {/* Buttons — Sizes */}
+      <ComponentLabel>Button Sizes</ComponentLabel>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--bb-space-3)', alignItems: 'center' }}>
+        <Button variant="primary" size="sm">Small</Button>
+        <Button variant="primary" size="md">Medium</Button>
+        <Button variant="primary" size="lg">Large</Button>
+      </div>
+
+      {/* Buttons — States */}
+      <ComponentLabel>Button States</ComponentLabel>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--bb-space-3)', alignItems: 'center' }}>
+        <Button variant="primary">Default</Button>
+        <Button variant="primary" disabled>Disabled</Button>
+        <Button variant="secondary" disabled>Disabled</Button>
+      </div>
+
+      {/* Inputs */}
+      <ComponentLabel>Inputs</ComponentLabel>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--bb-component-gap)' }}>
+        <Input label="Email" placeholder="you@example.com" type="email" />
+        <Input label="Full Name" placeholder="Jane Doe" hint="As it appears on your ID" />
+        <Input label="Password" placeholder="••••••••" type="password" error="Password must be at least 8 characters" />
+        <Input label="Bio" placeholder="Tell us about yourself..." textarea />
+      </div>
+
+      {/* Badges */}
+      <ComponentLabel>Badges</ComponentLabel>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--bb-space-2)', alignItems: 'center' }}>
+        <Badge variant="primary">Primary</Badge>
+        <Badge variant="secondary">Secondary</Badge>
+        <Badge variant="success">Success</Badge>
+        <Badge variant="error">Error</Badge>
+      </div>
+
+      {/* Toggles */}
+      <ComponentLabel>Toggles</ComponentLabel>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--bb-space-3)' }}>
+        <Toggle label="Email notifications" defaultChecked />
+        <Toggle label="Marketing emails" />
+        <Toggle label="Push notifications" defaultChecked />
       </div>
 
       {/* Cards */}
-      <div>
-        <div className="text-[10px] font-mono text-gray-400 mb-3">Cards</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--bb-component-gap)' }}>
-          <ProofCard title="Design Tokens">
-            Foundation colors cascade through semantic assignments to every component automatically.
-          </ProofCard>
-          <ProofCard title="Typography">
-            Font families, sizes, weights, and line heights all respond to token changes in real time.
-          </ProofCard>
-          <ProofCard title="Spacing">
-            A base unit drives the entire spacing scale, keeping proportions consistent throughout.
-          </ProofCard>
-        </div>
+      <ComponentLabel>Cards</ComponentLabel>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--bb-component-gap)' }}>
+        <ProofCard title="Design Tokens">
+          Foundation colors cascade through semantic assignments to every component automatically.
+        </ProofCard>
+        <ProofCard title="Typography">
+          Font families, sizes, weights, and line heights all respond to token changes in real time.
+        </ProofCard>
+        <ProofCard title="Spacing">
+          A base unit drives the entire spacing scale, keeping proportions consistent throughout.
+        </ProofCard>
       </div>
     </div>
   );
@@ -206,8 +250,8 @@ export default function PreviewPanel() {
         <SectionTitle>Spacing Scale</SectionTitle>
         <SpacingVis />
 
-        <SectionTitle>Proof Components</SectionTitle>
-        <ProofComponents />
+        <SectionTitle>Components</SectionTitle>
+        <ComponentShowcase />
       </div>
     </main>
   );

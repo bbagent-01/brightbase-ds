@@ -13,16 +13,28 @@ export const DEFAULT_FOUNDATION_COLORS = {
 };
 
 export const DEFAULT_SEMANTIC = {
+  // Backgrounds
   'bg-primary': 'neutral-100',
   'bg-surface': 'neutral-50',
   'bg-card': 'neutral-50',
+  // Text
   'text-primary': 'dark-900',
   'text-secondary': 'neutral-700',
   'text-on-action': 'neutral-50',
+  // Actions
   'action-primary': 'primary-500',
   'action-primary-hover': 'primary-600',
+  'action-secondary': 'neutral-700',
+  'action-secondary-hover': 'neutral-800',
+  'action-destructive': 'accent-600',
+  'action-destructive-hover': 'accent-700',
+  // Borders
   'border-default': 'neutral-200',
   'border-faint': 'neutral-100',
+  'border-focus': 'primary-400',
+  // Feedback
+  'feedback-success': 'secondary-500',
+  'feedback-error': 'accent-600',
 };
 
 export const DEFAULT_TYPOGRAPHY = {
@@ -46,7 +58,9 @@ export const DEFAULT_SPACING = {
 
 export const DEFAULT_BORDERS = {
   radius: 8,
+  cardRadius: 12,
   buttonRadius: 6,
+  inputRadius: 6,
   shadow: 'subtle',
 };
 

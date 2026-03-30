@@ -152,11 +152,31 @@ input[type="color"]::-webkit-color-swatch {
   background-color: var(--bb-bg-card);
 }
 
-/* Card */
+/* Destructive */
+.bb-btn-destructive {
+  background-color: var(--bb-action-destructive);
+  color: var(--bb-text-on-action);
+  border: none;
+}
+.bb-btn-destructive:hover {
+  background-color: var(--bb-action-destructive-hover);
+}
+
+/* Disabled state */
+.bb-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ============================================
+   CARD
+   ============================================ */
+
 .bb-card {
   background-color: var(--bb-bg-card);
   border: 1px solid var(--bb-border-default);
-  border-radius: var(--bb-radius);
+  border-radius: var(--bb-card-radius);
   padding: var(--bb-space-6);
   box-shadow: var(--bb-shadow);
   font-family: var(--bb-font-body);
@@ -175,4 +195,146 @@ input[type="color"]::-webkit-color-swatch {
   font-size: var(--bb-text-sm);
   color: var(--bb-text-secondary);
   line-height: var(--bb-line-height);
+}
+
+/* ============================================
+   INPUT
+   ============================================ */
+
+.bb-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bb-space-1);
+}
+
+.bb-input-label {
+  font-family: var(--bb-font-body);
+  font-size: var(--bb-text-sm);
+  font-weight: 500;
+  color: var(--bb-text-primary);
+}
+
+.bb-input {
+  font-family: var(--bb-font-body);
+  font-size: var(--bb-text-base);
+  color: var(--bb-text-primary);
+  background-color: var(--bb-bg-card);
+  border: 1px solid var(--bb-border-default);
+  border-radius: var(--bb-input-radius);
+  padding: var(--bb-space-2) var(--bb-space-3);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  line-height: var(--bb-line-height);
+  width: 100%;
+}
+
+.bb-input::placeholder {
+  color: var(--bb-text-secondary);
+  opacity: 0.6;
+}
+
+.bb-input:focus {
+  border-color: var(--bb-border-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bb-border-focus) 20%, transparent);
+}
+
+.bb-input-error {
+  border-color: var(--bb-feedback-error);
+}
+
+.bb-input-error:focus {
+  border-color: var(--bb-feedback-error);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bb-feedback-error) 20%, transparent);
+}
+
+.bb-input-hint {
+  font-family: var(--bb-font-body);
+  font-size: var(--bb-text-xs);
+  color: var(--bb-text-secondary);
+}
+
+.bb-input-error-msg {
+  font-family: var(--bb-font-body);
+  font-size: var(--bb-text-xs);
+  color: var(--bb-feedback-error);
+}
+
+.bb-textarea {
+  resize: vertical;
+  min-height: calc(var(--bb-text-base) * 4);
+}
+
+/* ============================================
+   BADGE / PILL
+   ============================================ */
+
+.bb-badge {
+  font-family: var(--bb-font-body);
+  font-size: var(--bb-text-xs);
+  font-weight: 500;
+  padding: var(--bb-space-1) var(--bb-space-2);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-space-1);
+  line-height: 1;
+}
+
+.bb-badge-primary {
+  background-color: color-mix(in srgb, var(--bb-action-primary) 15%, transparent);
+  color: var(--bb-action-primary);
+}
+
+.bb-badge-secondary {
+  background-color: var(--bb-bg-card);
+  color: var(--bb-text-secondary);
+  border: 1px solid var(--bb-border-default);
+}
+
+.bb-badge-success {
+  background-color: color-mix(in srgb, var(--bb-feedback-success) 15%, transparent);
+  color: var(--bb-feedback-success);
+}
+
+.bb-badge-error {
+  background-color: color-mix(in srgb, var(--bb-feedback-error) 15%, transparent);
+  color: var(--bb-feedback-error);
+}
+
+/* ============================================
+   TOGGLE / SWITCH
+   ============================================ */
+
+.bb-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background-color: var(--bb-border-default);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.bb-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--bb-bg-card);
+  transition: transform 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.bb-toggle[data-checked="true"] {
+  background-color: var(--bb-action-primary);
+}
+
+.bb-toggle[data-checked="true"]::after {
+  transform: translateX(20px);
 }
