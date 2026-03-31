@@ -151,7 +151,7 @@ const useTokenStore = create(
       addGradient: (name) => {
         get()._pushHistory();
         set((s) => ({
-          gradients: { ...s.gradients, [name]: { angle: 135, stops: ['primary-400', 'primary-600'] } },
+          gradients: { ...s.gradients, [name]: { angle: 180, stops: ['primary-300', 'primary-600'] } },
         }));
       },
 
@@ -307,7 +307,7 @@ const useTokenStore = create(
     {
       name: 'bb-ds-config',
       // Bump this when defaults change to force a reset for existing users
-      version: 4,
+      version: 5,
       // Don't persist undo history or computed scales
       partialize: (state) => ({
         foundationColors: state.foundationColors,
@@ -327,10 +327,11 @@ const useTokenStore = create(
           typography: persisted?.typography || { ...DEFAULT_TYPOGRAPHY },
           spacing: persisted?.spacing || { ...DEFAULT_SPACING },
           borders: persisted?.borders || { ...DEFAULT_BORDERS },
-          gradients: persisted?.gradients || { ...DEFAULT_GRADIENTS },
           elementGradients: persisted?.elementGradients || { ...DEFAULT_ELEMENT_GRADIENTS },
           buttonTokens: persisted?.buttonTokens || { ...DEFAULT_BUTTON_TOKENS },
         };
+        // Always regenerate gradients from foundation colors (ensures per-color coverage)
+        state.gradients = generateDefaultGradients(state.foundationColors);
         // Migrate v2 flat radius → v3 multiplier system
         if (state.borders.cardRadius !== undefined && state.borders.cardMult === undefined) {
           const r = state.borders.radius || 8;
