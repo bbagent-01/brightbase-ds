@@ -9,6 +9,9 @@ import {
   DEFAULT_SPACING,
   DEFAULT_BORDERS,
   DEFAULT_GRADIENTS,
+  DEFAULT_ELEMENT_GRADIENTS,
+  DEFAULT_BUTTON_TOKENS,
+  generateDefaultGradients,
 } from './defaults';
 
 /**
@@ -27,6 +30,8 @@ const useTokenStore = create(
       spacing: { ...DEFAULT_SPACING },
       borders: { ...DEFAULT_BORDERS },
       gradients: { ...DEFAULT_GRADIENTS },
+      elementGradients: { ...DEFAULT_ELEMENT_GRADIENTS },
+      buttonTokens: { ...DEFAULT_BUTTON_TOKENS },
 
       // Undo history (simple implementation)
       _history: [],
@@ -43,6 +48,8 @@ const useTokenStore = create(
           spacing: { ...s.spacing },
           borders: { ...s.borders },
           gradients: JSON.parse(JSON.stringify(s.gradients)),
+          elementGradients: { ...s.elementGradients },
+          buttonTokens: JSON.parse(JSON.stringify(s.buttonTokens)),
         };
       },
 
@@ -73,6 +80,7 @@ const useTokenStore = create(
           return {
             foundationColors: updated,
             scales: generateAllScales(updated),
+            gradients: { ...s.gradients, [`gradient-${name}`]: { angle: 180, stops: [`${name}-300`, `${name}-600`] } },
           };
         });
       },
@@ -89,10 +97,20 @@ const useTokenStore = create(
               cleanSemantic[key] = 'neutral-500'; // fallback
             }
           }
+          // Remove matching gradient
+          const cleanGradients = { ...s.gradients };
+          delete cleanGradients[`gradient-${name}`];
+          // Clean element gradient refs
+          const cleanElementGradients = { ...s.elementGradients };
+          for (const [el, gradName] of Object.entries(cleanElementGradients)) {
+            if (gradName === `gradient-${name}`) cleanElementGradients[el] = null;
+          }
           return {
             foundationColors: updated,
             scales: generateAllScales(updated),
             semantic: cleanSemantic,
+            gradients: cleanGradients,
+            elementGradients: cleanElementGradients,
           };
         });
       },
@@ -144,6 +162,25 @@ const useTokenStore = create(
           delete updated[name];
           return { gradients: updated };
         });
+      },
+
+      // --- Actions: Element Gradients ---
+      setElementGradient: (element, gradientName) => {
+        get()._pushHistory();
+        set((s) => ({
+          elementGradients: { ...s.elementGradients, [element]: gradientName },
+        }));
+      },
+
+      // --- Actions: Button Tokens ---
+      setButtonToken: (variant, key, ref) => {
+        get()._pushHistory();
+        set((s) => ({
+          buttonTokens: {
+            ...s.buttonTokens,
+            [variant]: { ...s.buttonTokens[variant], [key]: ref },
+          },
+        }));
       },
 
       // --- Actions: Typography ---
@@ -225,6 +262,8 @@ const useTokenStore = create(
           spacing: { ...DEFAULT_SPACING },
           borders: { ...DEFAULT_BORDERS },
           gradients: { ...DEFAULT_GRADIENTS },
+          elementGradients: { ...DEFAULT_ELEMENT_GRADIENTS },
+          buttonTokens: { ...DEFAULT_BUTTON_TOKENS },
         });
       },
 
@@ -238,7 +277,9 @@ const useTokenStore = create(
           typography: config.typography || DEFAULT_TYPOGRAPHY,
           spacing: config.spacing || DEFAULT_SPACING,
           borders: config.borders || DEFAULT_BORDERS,
-          gradients: config.gradients || DEFAULT_GRADIENTS,
+          gradients: config.gradients || generateDefaultGradients(colors),
+          elementGradients: config.elementGradients || DEFAULT_ELEMENT_GRADIENTS,
+          buttonTokens: config.buttonTokens || DEFAULT_BUTTON_TOKENS,
         });
       },
 
@@ -251,6 +292,8 @@ const useTokenStore = create(
           spacing: s.spacing,
           borders: s.borders,
           gradients: s.gradients,
+          elementGradients: s.elementGradients,
+          buttonTokens: s.buttonTokens,
         };
       },
 
@@ -264,7 +307,7 @@ const useTokenStore = create(
     {
       name: 'bb-ds-config',
       // Bump this when defaults change to force a reset for existing users
-      version: 3,
+      version: 4,
       // Don't persist undo history or computed scales
       partialize: (state) => ({
         foundationColors: state.foundationColors,
@@ -273,6 +316,8 @@ const useTokenStore = create(
         spacing: state.spacing,
         borders: state.borders,
         gradients: state.gradients,
+        elementGradients: state.elementGradients,
+        buttonTokens: state.buttonTokens,
       }),
       // Migrate persisted state to current schema
       migrate: (persisted) => {
@@ -283,6 +328,8 @@ const useTokenStore = create(
           spacing: persisted?.spacing || { ...DEFAULT_SPACING },
           borders: persisted?.borders || { ...DEFAULT_BORDERS },
           gradients: persisted?.gradients || { ...DEFAULT_GRADIENTS },
+          elementGradients: persisted?.elementGradients || { ...DEFAULT_ELEMENT_GRADIENTS },
+          buttonTokens: persisted?.buttonTokens || { ...DEFAULT_BUTTON_TOKENS },
         };
         // Migrate v2 flat radius → v3 multiplier system
         if (state.borders.cardRadius !== undefined && state.borders.cardMult === undefined) {

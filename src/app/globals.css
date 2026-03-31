@@ -106,6 +106,7 @@ input[type="color"]::-webkit-color-swatch {
 .bb-btn {
   font-family: var(--bb-font-body);
   font-weight: 500;
+  letter-spacing: var(--bb-tracking-body);
   border-radius: var(--bb-button-radius);
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s, border-color 0.15s;
@@ -122,55 +123,42 @@ input[type="color"]::-webkit-color-swatch {
 
 /* Primary */
 .bb-btn-primary {
-  background-color: var(--bb-action-primary);
-  color: var(--bb-text-on-action);
-  border: none;
+  background-color: var(--bb-btn-primary-bg);
+  color: var(--bb-btn-primary-text);
+  border: var(--bb-btn-primary-border, none);
 }
 .bb-btn-primary:hover {
-  background-color: var(--bb-action-primary-hover);
+  background-color: var(--bb-btn-primary-hover);
 }
 
 /* Secondary */
 .bb-btn-secondary {
-  background-color: transparent;
-  color: var(--bb-action-primary);
-  border: 1px solid var(--bb-border-default);
+  background-color: var(--bb-btn-secondary-bg);
+  color: var(--bb-btn-secondary-text);
+  border: var(--bb-btn-secondary-border, none);
 }
 .bb-btn-secondary:hover {
-  background-color: var(--bb-action-primary);
-  color: var(--bb-text-on-action);
-  border-color: var(--bb-action-primary);
+  background-color: var(--bb-btn-secondary-hover);
 }
 
 /* Ghost */
 .bb-btn-ghost {
-  background-color: transparent;
-  color: var(--bb-text-primary);
-  border: none;
+  background-color: var(--bb-btn-ghost-bg);
+  color: var(--bb-btn-ghost-text);
+  border: var(--bb-btn-ghost-border, none);
 }
 .bb-btn-ghost:hover {
-  background-color: var(--bb-bg-card);
+  background-color: var(--bb-btn-ghost-hover);
 }
 
 /* Destructive */
 .bb-btn-destructive {
-  background-color: var(--bb-action-destructive);
-  color: var(--bb-text-on-action);
-  border: none;
+  background-color: var(--bb-btn-destructive-bg);
+  color: var(--bb-btn-destructive-text);
+  border: var(--bb-btn-destructive-border, none);
 }
 .bb-btn-destructive:hover {
-  background-color: var(--bb-action-destructive-hover);
-}
-
-/* Gradient */
-.bb-btn-gradient {
-  background: var(--bb-gradient-primary);
-  color: var(--bb-text-on-action);
-  border: none;
-}
-.bb-btn-gradient:hover {
-  opacity: 0.9;
-  filter: brightness(1.05);
+  background-color: var(--bb-btn-destructive-hover);
 }
 
 /* Disabled state */
@@ -185,7 +173,7 @@ input[type="color"]::-webkit-color-swatch {
    ============================================ */
 
 .bb-card {
-  background-color: var(--bb-bg-card);
+  background: var(--bb-card-gradient, var(--bb-bg-card));
   border: 1px solid var(--bb-border-default);
   border-radius: var(--bb-card-radius);
   padding: var(--bb-space-6);
@@ -199,6 +187,7 @@ input[type="color"]::-webkit-color-swatch {
   font-size: var(--bb-text-lg);
   color: var(--bb-text-primary);
   line-height: var(--bb-heading-line-height);
+  letter-spacing: var(--bb-tracking-heading);
   margin: 0 0 var(--bb-space-2) 0;
 }
 
@@ -228,6 +217,7 @@ input[type="color"]::-webkit-color-swatch {
 .bb-input {
   font-family: var(--bb-font-body);
   font-size: var(--bb-text-base);
+  letter-spacing: var(--bb-tracking-body);
   color: var(--bb-text-primary);
   background-color: var(--bb-bg-card);
   border: 1px solid var(--bb-border-default);

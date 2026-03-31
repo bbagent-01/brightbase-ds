@@ -9,7 +9,8 @@ import ColorSection from './sections/ColorSection';
 import TypographySection from './sections/TypographySection';
 import SpacingSection from './sections/SpacingSection';
 import BorderSection from './sections/BorderSection';
-import GradientSection from './sections/GradientSection';
+import ButtonStyleSection from './sections/ButtonStyleSection';
+import ElementStyleSection from './sections/ElementStyleSection';
 import { generateCSS } from '@/lib/export/css';
 import { generateDTCG } from '@/lib/export/dtcg';
 import { downloadJSON, uploadJSON, copyToClipboard } from '@/lib/persistence/storage';
@@ -137,20 +138,27 @@ export default function EditorLayout() {
                 <ColorSection />
               </SidebarSection>
 
-              <SidebarSection title="Typography" defaultOpen={false}>
+              <SidebarSection title="Typography" defaultOpen={true}>
                 <TypographySection />
               </SidebarSection>
 
-              <SidebarSection title="Spacing" defaultOpen={false}>
+              <SidebarSection title="Spacing" defaultOpen={true}>
                 <SpacingSection />
               </SidebarSection>
 
-              <SidebarSection title="Borders & Shadows" defaultOpen={false}>
+              <SidebarSection title="Borders & Shadows" defaultOpen={true}>
                 <BorderSection />
               </SidebarSection>
+            </>
+          }
+          componentSections={
+            <>
+              <SidebarSection title="Button Styles" defaultOpen={true}>
+                <ButtonStyleSection />
+              </SidebarSection>
 
-              <SidebarSection title="Gradients" defaultOpen={false}>
-                <GradientSection />
+              <SidebarSection title="Element Gradients" defaultOpen={true}>
+                <ElementStyleSection />
               </SidebarSection>
             </>
           }

@@ -46,6 +46,9 @@ export const DEFAULT_TYPOGRAPHY = {
   bodyWeight: 400,
   lineHeight: 1.5,
   headingLineHeight: 1.15,
+  eyebrowTracking: 0.1,
+  headingTracking: -0.02,
+  bodyTracking: 0,
 };
 
 export const DEFAULT_SPACING = {
@@ -77,10 +80,29 @@ export const SEMANTIC_GROUPS = [
   { label: 'Feedback', prefix: 'feedback', keys: ['feedback-success', 'feedback-error'], defaultRef: 'neutral-500' },
 ];
 
-// Default gradient definitions — stops reference scale keys (cascade with foundation colors)
-export const DEFAULT_GRADIENTS = {
-  'gradient-primary': { angle: 135, stops: ['primary-400', 'primary-600'] },
-  'gradient-accent': { angle: 90, stops: ['accent-300', 'primary-500'] },
+// Auto-generate one gradient per foundation color (subtle tint-to-shade, vertical)
+export function generateDefaultGradients(foundationColors) {
+  const gradients = {};
+  for (const name of Object.keys(foundationColors)) {
+    gradients[`gradient-${name}`] = { angle: 180, stops: [`${name}-300`, `${name}-600`] };
+  }
+  return gradients;
+}
+
+export const DEFAULT_GRADIENTS = generateDefaultGradients(DEFAULT_FOUNDATION_COLORS);
+
+// Element gradient assignments (null = no gradient, string = gradient name)
+export const DEFAULT_ELEMENT_GRADIENTS = {
+  card: null,
+  container: null,
+};
+
+// Button component tokens — per-variant colors
+export const DEFAULT_BUTTON_TOKENS = {
+  primary:     { bg: 'primary-500',   hover: 'primary-600',   text: 'accent-50',     border: null },
+  secondary:   { bg: 'transparent',   hover: 'secondary-100', text: 'secondary-500',  border: 'neutral-200' },
+  ghost:       { bg: 'transparent',   hover: 'accent-100',    text: 'dark-900',       border: null },
+  destructive: { bg: 'primary-700',   hover: 'primary-800',   text: 'accent-50',      border: null },
 };
 
 // Type scale — derived from baseSize using a ratio

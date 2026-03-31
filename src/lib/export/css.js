@@ -6,7 +6,7 @@ import { TYPE_SCALE, SHADOW_PRESETS } from '@/lib/tokens/defaults';
  * @param {string} mode - 'resolved' (flat values) or 'referenced' (var() chains)
  */
 export function generateCSS(state, mode = 'resolved') {
-  const { scales, semantic, typography, spacing, borders, gradients } = state;
+  const { scales, semantic, typography, spacing, borders, gradients, elementGradients, buttonTokens } = state;
   const lines = [':root {'];
 
   if (mode === 'referenced') {
@@ -37,6 +37,9 @@ export function generateCSS(state, mode = 'resolved') {
   lines.push(`  --bb-body-weight: ${typography.bodyWeight};`);
   lines.push(`  --bb-line-height: ${typography.lineHeight};`);
   lines.push(`  --bb-heading-line-height: ${typography.headingLineHeight};`);
+  lines.push(`  --bb-tracking-eyebrow: ${typography.eyebrowTracking ?? 0.1}em;`);
+  lines.push(`  --bb-tracking-heading: ${typography.headingTracking ?? -0.02}em;`);
+  lines.push(`  --bb-tracking-body: ${typography.bodyTracking ?? 0}em;`);
 
   for (const [name, ratio] of Object.entries(TYPE_SCALE)) {
     lines.push(`  --bb-text-${name}: ${Math.round(typography.baseSize * ratio)}px;`);
@@ -71,6 +74,35 @@ export function generateCSS(state, mode = 'resolved') {
     for (const [name, grad] of Object.entries(gradients)) {
       const resolvedStops = grad.stops.map((ref) => scales[ref] || '#ff00ff');
       lines.push(`  --bb-${name}: linear-gradient(${grad.angle}deg, ${resolvedStops.join(', ')});`);
+    }
+  }
+
+  // Element gradients
+  if (elementGradients) {
+    for (const [el, gradName] of Object.entries(elementGradients)) {
+      if (gradName && gradients && gradients[gradName]) {
+        const grad = gradients[gradName];
+        const resolvedStops = grad.stops.map((ref) => scales[ref] || '#ff00ff');
+        lines.push(`  --bb-${el}-gradient: linear-gradient(${grad.angle}deg, ${resolvedStops.join(', ')});`);
+      }
+    }
+  }
+
+  // Button tokens
+  if (buttonTokens) {
+    lines.push('');
+    const resolve = (ref) => {
+      if (!ref || ref === 'transparent') return ref || 'transparent';
+      if (scales[ref]) return scales[ref];
+      const semRef = semantic[ref];
+      if (semRef && scales[semRef]) return scales[semRef];
+      return ref;
+    };
+    for (const [variant, tokens] of Object.entries(buttonTokens)) {
+      lines.push(`  --bb-btn-${variant}-bg: ${resolve(tokens.bg)};`);
+      lines.push(`  --bb-btn-${variant}-hover: ${resolve(tokens.hover)};`);
+      lines.push(`  --bb-btn-${variant}-text: ${resolve(tokens.text)};`);
+      lines.push(`  --bb-btn-${variant}-border: ${tokens.border ? '1px solid ' + resolve(tokens.border) : 'none'};`);
     }
   }
 

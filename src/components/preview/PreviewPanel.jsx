@@ -155,7 +155,7 @@ function TypeSpecimen() {
           fontWeight: 600,
           color: 'var(--bb-action-primary)',
           textTransform: 'uppercase',
-          letterSpacing: '0.1em',
+          letterSpacing: 'var(--bb-tracking-eyebrow)',
           marginBottom: 'var(--bb-space-2)',
         }}
       >
@@ -173,6 +173,7 @@ function TypeSpecimen() {
               fontWeight: 'var(--bb-heading-weight)',
               color: 'var(--bb-text-primary)',
               lineHeight: 'var(--bb-heading-line-height)',
+              letterSpacing: 'var(--bb-tracking-heading)',
             }}
           >
             {PANGRAM}
@@ -189,6 +190,7 @@ function TypeSpecimen() {
           fontWeight: 'var(--bb-body-weight)',
           color: 'var(--bb-text-secondary)',
           lineHeight: 'var(--bb-line-height)',
+          letterSpacing: 'var(--bb-tracking-body)',
           marginTop: 'var(--bb-space-4)',
           maxWidth: '600px',
         }}
@@ -296,7 +298,6 @@ function ComponentShowcase() {
         <Button variant="secondary">Secondary</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="destructive">Destructive</Button>
-        <Button variant="gradient">Gradient</Button>
       </div>
 
       {/* Buttons — Sizes */}

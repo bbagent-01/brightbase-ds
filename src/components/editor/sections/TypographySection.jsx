@@ -53,6 +53,28 @@ export default function TypographySection() {
         min={1.0} max={1.6} step={0.05}
         onChange={(v) => setTypography('headingLineHeight', v)}
       />
+
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-editor-text-muted mt-2 mb-1">
+        Letter Spacing
+      </div>
+      <SliderControl
+        label="Eyebrow"
+        value={typography.eyebrowTracking ?? 0.1}
+        min={0} max={0.2} step={0.005} unit="em"
+        onChange={(v) => setTypography('eyebrowTracking', v)}
+      />
+      <SliderControl
+        label="Heading"
+        value={typography.headingTracking ?? -0.02}
+        min={-0.05} max={0.05} step={0.005} unit="em"
+        onChange={(v) => setTypography('headingTracking', v)}
+      />
+      <SliderControl
+        label="Body"
+        value={typography.bodyTracking ?? 0}
+        min={-0.02} max={0.05} step={0.005} unit="em"
+        onChange={(v) => setTypography('bodyTracking', v)}
+      />
     </div>
   );
 }

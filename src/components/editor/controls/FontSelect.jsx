@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+const PANGRAM = 'The Quick Brown Fox Jumps Over The Lazy Dog';
+const PANGRAM_LOWER = 'The quick brown fox jumps over the lazy dog';
+
 export default function FontSelect({ label, value, options, onChange }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -23,16 +26,19 @@ export default function FontSelect({ label, value, options, onChange }) {
       {/* Selected font display */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-full bg-editor-bg border border-editor-border rounded-lg px-3 py-2 text-left outline-none focus:border-editor-accent hover:border-editor-text-muted transition-colors"
+        className="w-full bg-editor-bg border border-editor-border rounded-lg px-3 py-2 text-left outline-none focus:border-editor-accent hover:border-editor-text-muted transition-colors overflow-hidden"
       >
         <div
-          className="text-lg text-editor-text leading-tight"
+          className="text-lg text-editor-text leading-tight whitespace-nowrap overflow-hidden"
           style={{ fontFamily: value }}
         >
-          {value}
+          {PANGRAM}
         </div>
-        <div className="text-[9px] font-mono text-editor-text-muted mt-0.5">
-          The quick brown fox jumps over the lazy dog
+        <div
+          className="text-[9px] text-editor-text-muted mt-0.5 whitespace-nowrap overflow-hidden"
+          style={{ fontFamily: value }}
+        >
+          {value} — {PANGRAM_LOWER}
         </div>
       </button>
 
@@ -43,21 +49,21 @@ export default function FontSelect({ label, value, options, onChange }) {
             <button
               key={font}
               onClick={() => { onChange(font); setOpen(false); }}
-              className={`w-full text-left px-3 py-3 hover:bg-editor-surface transition-colors border-b border-editor-border last:border-0 ${
+              className={`w-full text-left px-3 py-3 hover:bg-editor-surface transition-colors border-b border-editor-border last:border-0 overflow-hidden ${
                 value === font ? 'bg-editor-surface' : ''
               }`}
             >
               <div
-                className="text-xl text-editor-text leading-tight"
+                className="text-lg text-editor-text leading-tight whitespace-nowrap overflow-hidden"
                 style={{ fontFamily: font }}
               >
-                {font}
+                {PANGRAM}
               </div>
               <div
-                className="text-xs text-editor-text-muted mt-1"
+                className="text-xs text-editor-text-muted mt-1 whitespace-nowrap overflow-hidden"
                 style={{ fontFamily: font }}
               >
-                AaBbCcDd 0123456789
+                {font} — {PANGRAM_LOWER}
               </div>
             </button>
           ))}

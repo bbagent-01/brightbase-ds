@@ -5,6 +5,7 @@ import useTokenStore from '@/lib/tokens/store';
 import ScaleStepPicker from '../controls/ScaleStepPicker';
 import { getContrastInfo } from '@/lib/color/contrast';
 import { DEFAULT_SEMANTIC_KEYS, SEMANTIC_GROUPS } from '@/lib/tokens/defaults';
+import SliderControl from '../controls/SliderControl';
 
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 
@@ -25,8 +26,13 @@ export default function ColorSection() {
   const setSemanticRef = useTokenStore((s) => s.setSemanticRef);
   const addSemanticToken = useTokenStore((s) => s.addSemanticToken);
   const removeSemanticToken = useTokenStore((s) => s.removeSemanticToken);
+  const gradients = useTokenStore((s) => s.gradients);
+  const setGradient = useTokenStore((s) => s.setGradient);
+  const addGradient = useTokenStore((s) => s.addGradient);
+  const removeGradient = useTokenStore((s) => s.removeGradient);
 
   const [newColorName, setNewColorName] = useState('');
+  const [newGradientName, setNewGradientName] = useState('');
   const [addingGroup, setAddingGroup] = useState(null); // which group is showing the add input
   const [newTokenName, setNewTokenName] = useState('');
 
@@ -247,6 +253,98 @@ export default function ColorSection() {
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Gradients */}
+      <div>
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-editor-text-muted mb-2">
+          Gradients
+        </div>
+        <div className="space-y-3">
+          {Object.entries(gradients || {}).map(([name, grad]) => {
+            const resolvedStops = grad.stops.map((ref) => scales[ref] || '#ff00ff');
+            const gradientCSS = `linear-gradient(${grad.angle}deg, ${resolvedStops.join(', ')})`;
+            return (
+              <div key={name} className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-editor-text truncate">{name}</span>
+                  <button
+                    onClick={() => removeGradient(name)}
+                    className="text-editor-text-muted hover:text-red-400 text-[10px] transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div
+                  className="w-full h-6 rounded border border-editor-border"
+                  style={{ background: gradientCSS }}
+                />
+                <SliderControl
+                  label="Angle"
+                  value={grad.angle}
+                  min={0} max={360} step={5} unit="°"
+                  onChange={(v) => setGradient(name, { ...grad, angle: v })}
+                />
+                <div className="space-y-1">
+                  {grad.stops.map((stopRef, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <ScaleStepPicker
+                        currentRef={stopRef}
+                        onSelect={(ref) => {
+                          const stops = [...grad.stops];
+                          stops[idx] = ref;
+                          setGradient(name, { ...grad, stops });
+                        }}
+                      />
+                      <span className="text-[10px] font-mono text-editor-text flex-1 truncate">{stopRef}</span>
+                      {grad.stops.length > 2 && (
+                        <button
+                          onClick={() => setGradient(name, { ...grad, stops: grad.stops.filter((_, i) => i !== idx) })}
+                          className="text-editor-text-muted hover:text-red-400 text-[10px]"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => setGradient(name, { ...grad, stops: [...grad.stops, 'neutral-500'] })}
+                    className="text-[10px] text-editor-accent hover:text-editor-accent-hover"
+                  >
+                    + Add stop
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {/* Add gradient */}
+        <div className="flex gap-1 mt-2">
+          <input
+            type="text"
+            value={newGradientName}
+            onChange={(e) => setNewGradientName(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+            placeholder="name"
+            className="flex-1 bg-editor-bg border border-editor-border rounded px-2 py-1 text-xs text-editor-text outline-none focus:border-editor-accent"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && newGradientName) {
+                const fullName = newGradientName.startsWith('gradient-') ? newGradientName : `gradient-${newGradientName}`;
+                if (!gradients[fullName]) { addGradient(fullName); setNewGradientName(''); }
+              }
+            }}
+          />
+          <button
+            onClick={() => {
+              if (newGradientName) {
+                const fullName = newGradientName.startsWith('gradient-') ? newGradientName : `gradient-${newGradientName}`;
+                if (!gradients[fullName]) { addGradient(fullName); setNewGradientName(''); }
+              }
+            }}
+            className="bg-editor-accent text-white text-xs px-2 py-1 rounded hover:bg-editor-accent-hover transition-colors"
+          >
+            Add
+          </button>
         </div>
       </div>
     </div>

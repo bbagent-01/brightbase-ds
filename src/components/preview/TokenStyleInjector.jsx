@@ -16,6 +16,8 @@ export default function TokenStyleInjector() {
   const spacing = useTokenStore((s) => s.spacing);
   const borders = useTokenStore((s) => s.borders);
   const gradients = useTokenStore((s) => s.gradients);
+  const elementGradients = useTokenStore((s) => s.elementGradients);
+  const buttonTokens = useTokenStore((s) => s.buttonTokens);
 
   useEffect(() => {
     const lines = [':root {'];
@@ -40,6 +42,9 @@ export default function TokenStyleInjector() {
     lines.push(`  --bb-body-weight: ${typography.bodyWeight};`);
     lines.push(`  --bb-line-height: ${typography.lineHeight};`);
     lines.push(`  --bb-heading-line-height: ${typography.headingLineHeight};`);
+    lines.push(`  --bb-tracking-eyebrow: ${typography.eyebrowTracking ?? 0.1}em;`);
+    lines.push(`  --bb-tracking-heading: ${typography.headingTracking ?? -0.02}em;`);
+    lines.push(`  --bb-tracking-body: ${typography.bodyTracking ?? 0}em;`);
 
     // Type scale (derived from base size)
     for (const [name, ratio] of Object.entries(TYPE_SCALE)) {
@@ -73,6 +78,34 @@ export default function TokenStyleInjector() {
       }
     }
 
+    // Element gradients (only emit when set)
+    if (elementGradients) {
+      for (const [el, gradName] of Object.entries(elementGradients)) {
+        if (gradName && gradients[gradName]) {
+          const grad = gradients[gradName];
+          const resolvedStops = grad.stops.map((ref) => scales[ref] || '#ff00ff');
+          lines.push(`  --bb-${el}-gradient: linear-gradient(${grad.angle}deg, ${resolvedStops.join(', ')});`);
+        }
+      }
+    }
+
+    // Button component tokens
+    if (buttonTokens) {
+      const resolve = (ref) => {
+        if (!ref || ref === 'transparent') return ref || 'transparent';
+        if (scales[ref]) return scales[ref];
+        const semRef = semantic[ref];
+        if (semRef && scales[semRef]) return scales[semRef];
+        return ref;
+      };
+      for (const [variant, tokens] of Object.entries(buttonTokens)) {
+        lines.push(`  --bb-btn-${variant}-bg: ${resolve(tokens.bg)};`);
+        lines.push(`  --bb-btn-${variant}-hover: ${resolve(tokens.hover)};`);
+        lines.push(`  --bb-btn-${variant}-text: ${resolve(tokens.text)};`);
+        lines.push(`  --bb-btn-${variant}-border: ${tokens.border ? '1px solid ' + resolve(tokens.border) : 'none'};`);
+      }
+    }
+
     lines.push('}');
 
     // Inject or update style tag
@@ -87,7 +120,7 @@ export default function TokenStyleInjector() {
     return () => {
       // Don't remove on unmount — persist until page unload
     };
-  }, [scales, semantic, typography, spacing, borders, gradients]);
+  }, [scales, semantic, typography, spacing, borders, gradients, elementGradients, buttonTokens]);
 
   return null;
 }
